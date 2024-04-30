@@ -1,0 +1,54 @@
+html {
+    background-color: var(--dark-green);
+}
+
+body {
+    background-color: var(--dark-green);
+    // background-image: linear-gradient(175deg, var(--brunswick-green), var(--dark-green));
+}
+
+section {
+    background-color: var(--brunswick-green);
+    width: 100%;
+    margin: 18px auto;
+    border-radius: .5em;
+}
+
+.flop {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    max-width: 1260px;
+}
+
+// card styles
+
+.card-slot {
+    width: 226px;
+    height: 314px;
+    perspective: 1000px;
+    margin: 10px 5px;
+    filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.342));
+}
+.card-slot:hover .card {
+    transform: rotateY(180deg);
+    filter: none;
+}
+.card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 355ms;
+    transform-style: preserve-3d;
+}
+.card-back, .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.card-face {
+    transform: rotateY(180deg);
+}
