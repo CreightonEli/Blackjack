@@ -2,9 +2,8 @@
 
 ## To Do:
 - make blackjack game
-    - create array for cards in flop
+    - dynamically change and render drawn cards
+        - could make it so that a large number of cards are in HTML with empty classes from beginning and just iterate through card slots, removing the empty class from as many elements as there are cards drawn. Not very dynamic though.
     - store the value of cards drawn and sum them up for game logic
-    - make function to draw and add to array upon button press (hit me button)
     - create draw animation that sees cards flying in from top middle of screen with back up
-    - make it so that cards flipping is an animation that auto completes after draw animation completes
     - add control panel at top as header to change settings or maybe game mode later on...
