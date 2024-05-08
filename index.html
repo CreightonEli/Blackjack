@@ -8,40 +8,13 @@
     <script src="script.js" defer></script>
 </head>
 <body>
+    <h1>Blackjack</h1>
+    <h2><span id="win-lose-el">Total</span>: <span id="point-el">0</span></h2>
+    <!-- dealer cards go here -->
+    <!-- <div class="dealer-hand"></div> -->
     <section>
-        <div class="flop">
-            <div class="card-slot">
-                <div class="card">
-                    <img class="card-back" src="https://deckofcardsapi.com/static/img/back.png">
-                    <img class="card-face" src="https://github.com/crobertsbmw/deckofcards/blob/master/static/img/X2.png?raw=true">
-                </div>
-            </div>
-            <div class="card-slot empty">
-                <div class="card">
-                    <img class="card-back" src="https://deckofcardsapi.com/static/img/back.png">
-                    <img class="card-face" src="https://github.com/crobertsbmw/deckofcards/blob/master/static/img/X2.png?raw=true">
-                </div>
-            </div>
-            <div class="card-slot empty">
-                <div class="card">
-                    <img class="card-back" src="https://deckofcardsapi.com/static/img/back.png">
-                    <img class="card-face" src="https://github.com/crobertsbmw/deckofcards/blob/master/static/img/X2.png?raw=true">
-                </div>
-            </div>
-            <div class="card-slot empty">
-                <div class="card">
-                    <img class="card-back" src="https://deckofcardsapi.com/static/img/back.png">
-                    <img class="card-face" src="https://github.com/crobertsbmw/deckofcards/blob/master/static/img/X2.png?raw=true">
-                </div>
-            </div>
-            <div class="card-slot empty">
-                <div class="card">
-                    <img class="card-back" src="https://deckofcardsapi.com/static/img/back.png">
-                    <img class="card-face" src="https://github.com/crobertsbmw/deckofcards/blob/master/static/img/X2.png?raw=true">
-                </div>
-            </div>
-        </div>
-        <!-- <button id="hit-btn">Hit</button> -->
+        <div class="hand"></div>
     </section>
+    <button id="hit-btn" onclick="hit()">Hit</button>
 </body>
 </html>
