@@ -9,81 +9,200 @@ let cardAmount = 1
 let deckID = "new"
 let faces = []
 let pointSum = 0
-let turn = 0
+let dealerPointSum = 0
+let turn = 1
+let standing = false
 
 // Game Structure:
 // - [x] player is dealt first card
-// - [] dealer card is dealt face down
-// - [] player card is dealt again
-// - [] dealer card is dealt face up
-// - [] player hits as much as they want (until bust or blackjack) or stays
+// - [x] dealer card is dealt face down
+// - [x] player card is dealt again
+// - [x] dealer card is dealt face up
+// - [/] player hits as much as they want (until bust or blackjack) or stays
 // - [] dealer reveals hidden card
 // - [] if dealer hand total is below 17 then draw a card until total is above 16
 
 // Win/Lose Conditions:
-// - [] player wins if player hand is greater than dealer hand
+// - [x] player wins if player hand is greater than dealer hand
 // - [] dealer wins if dealer hand is greater than player hand or is blackjack
 // - [/] player or dealer loses if hand is greater than 21
 
-function drawCard(deckObj, i) {
-    let cardEl = document.createElement("div")
-
-    // creates image path string and adds to faces array
+function renderCards(deckObj, i, player) {
+    // creates image path string
     const cardsImgPath = "/images/cards/" + deckObj.cards[i].code + ".png"
+    // adds to path to current faces array index
     faces[i] = cardsImgPath
-    // console.log(faces[i])
     
+    // creates cardEl div element as variable
+    let cardEl = document.createElement("div")
+    let hiddenCardEl = document.createElement("div")    
     // draws card with src of stored cardsImgPath and adds id = i
-    cardEl.classList.add('card-slot')
-    cardEl.innerHTML = '<div class="card"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="' + faces[i] + '" id="' + i + '"></div>'
-    hand.appendChild(cardEl)
+    cardEl.classList.add('card-slot') // adds "card-slot" class to cardEl div
+    hiddenCardEl.classList.add('card-slot') // adds "card-slot" class to hiddenCardEl div
+    cardEl.innerHTML = '<div class="card"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="' + faces[i] + '" id="' + i + '"></div>' // adds children to "cardEl" div
+    hiddenCardEl.innerHTML = '<div class="hidden"><img class="card-back" src="/images/cards/back.png"></div>' // adds children to "hiddenCardEl" div
+
+    if (player === "player") {
+        hand.appendChild(cardEl) // adds that cardEl div along with it's nested element to PLAYER "hand"
+    }
+    else if (player === "dealer" && turn === 2) {
+        dealerHand.appendChild(hiddenCardEl) // adds that cardEl div along with it's nested element to DEALER "hand"
+    }
+    else if (player === "dealer") {
+        dealerHand.appendChild(cardEl) // adds that cardEl div along with it's nested element to DEALER "hand"
+    }
 }
 
-function hit() {
+// dealer draws cards to dealer hand
+function dealerDraw() {
     const domainStr = "https://deckofcardsapi.com/api/deck/" + deckID + "/draw/?count=" + cardAmount
+
     // call API and construct deck object:
     fetch(domainStr)
         .then(response => {
             return response.json()
         })
-        .then(deckObj => { // game runs in here
-            const cardsLength = deckObj.cards.length
-            deckID = deckObj.deck_id
-            // Assigning proper integer values to cards drawn
-            if (deckObj.cards[0].value === "ACE" && pointSum + 11 <= 21) {
-                pointSum += 11
-                console.log("Ace is BIG")
+        .then(deckObj => {
+            const cardsLength = deckObj.cards.length // grabs amount of cards drawn in 1 go around
+            deckID = deckObj.deck_id // grabs deck ID from deck object fetched
+
+            // Assigning proper integer values to cards drawn to dealer deck and adding points to DEALER hand
+            if (deckObj.cards[0].value === "ACE" && dealerPointSum + 11 <= 21) { // if ace card is drawn and hand sum doesn't break 21 then it is worth 11 points
+                dealerPointSum += 11
             }
-            else if (deckObj.cards[0].value === "ACE" && pointSum + 11 > 21) {
-                pointSum += 1
-                console.log("Ace is SMALL")
+            else if (deckObj.cards[0].value === "ACE" && dealerPointSum + 11 > 21) { // if ace card is drawn and hand sum does break 21 then it is worth 1 point
+                dealerPointSum += 1
             }
-            else if (deckObj.cards[0].value === "JACK" || deckObj.cards[0].value === "QUEEN" || deckObj.cards[0].value === "KING") {
-                pointSum += 10
-                console.log("FACE is 10")
+            else if (deckObj.cards[0].value === "JACK" || deckObj.cards[0].value === "QUEEN" || deckObj.cards[0].value === "KING") { // if face card is drawn it is worth 10 points
+                dealerPointSum += 10
             }
-            else {
-                console.log("Just numbers")
-                pointSum += parseInt(deckObj.cards[0].value)
+            else { // if the card drawn is not an ace or face card then parse the integer value of card and add to the sum of the hand
+                dealerPointSum += parseInt(deckObj.cards[0].value)
             }
-            console.log("Card value: " + deckObj.cards[0].value)
-            console.log("Total: " + pointSum)
-            // console.log("Deck ID: " + deckID)
-            console.log(deckObj)
+
+            // console logs lol
+            console.log("Dealer's Turn " + turn + "\n===============\nDeck ID: " + deckID + "\nCurrent card value: " + deckObj.cards[0].value + "\nPlayer total: " + pointSum + "\nDealer total: " + dealerPointSum)
+            
+            // renders all drawn cards
             for (i = 0; i < cardsLength; i++) {
-                drawCard(deckObj, i)
+                renderCards(deckObj, i, "dealer")
                 // console.log(cardsLength + " card drawn.")
             }
-            if (pointSum > 21) {
-                winLoseEl.textContent = "Out"
+            
+            if (turn === 2) {
+                hit()
             }
-            else if (pointSum === 21) {
-                winLoseEl.textContent = "Win"
+            else if (standing === true) {
+                stand()
+                console.log(standing)
             }
+        })
+        .catch(error => {
+            console.log(error)
+        })
+}
+
+// player draws cards to player hand
+function hit() {
+    const domainStr = "https://deckofcardsapi.com/api/deck/" + deckID + "/draw/?count=" + cardAmount
+
+    // call API and construct deck object:
+    fetch(domainStr)
+        .then(response => {
+            return response.json()
+        })
+        .then(deckObj => {
+            const cardsLength = deckObj.cards.length // grabs amount of cards drawn in 1 go
+            deckID = deckObj.deck_id // grabs deck ID from deck object fetched
+
+            // Assigning proper integer values to cards drawn and adding them to PLAYER hand
+            if (deckObj.cards[0].value === "ACE" && pointSum + 11 <= 21) { // if ace card is drawn and hand sum doesn't break 21 then it is worth 11 points
+                pointSum += 11
+            }
+            else if (deckObj.cards[0].value === "ACE" && pointSum + 11 > 21) { // if ace card is drawn and hand sum does break 21 then it is worth 1 point
+                pointSum += 1
+            }
+            else if (deckObj.cards[0].value === "JACK" || deckObj.cards[0].value === "QUEEN" || deckObj.cards[0].value === "KING") { // if face card is drawn it is worth 10 points
+                pointSum += 10
+            }
+            else { // if the card drawn is not an ace or face card then parse the integer value of card and add to the sum of the hand
+                pointSum += parseInt(deckObj.cards[0].value)
+            }
+
+            // bunch of random console logs (CAN and maybe should DELETE LATER)
+            console.log("Player's Turn " + turn + "\n===============\nDeck ID: " + deckID + "\nCurrent card value: " + deckObj.cards[0].value + "\nPlayer total: " + pointSum + "\nDealer total: " + dealerPointSum)
+
+            // renders all drawn cards
+            for (i = 0; i < cardsLength; i++) {
+                renderCards(deckObj, i, "player")
+                // console.log(cardsLength + " card drawn.")
+            }
+
+            // Win/Lose condition check:
+            if (pointSum > 21) { // lose condition
+                winLoseEl.textContent = "You're out!"
+
+            }
+            else if (pointSum === 21) { // win condition
+                winLoseEl.textContent = "Blackjack!"
+            }
+            
+            // render points to screen
             pointEl.innerHTML = pointSum
+
+            // if turn is 1 or 2 call dealer draw function, else continue:
+            if (turn === 1 || turn === 2) {
+                dealerDraw()
+            }
+
+            // increment turn number
             turn += 1
-            console.log("Turn: " + turn)
             // draw five cards to win (five card charlie) unless dealer draws blackjack
+        })
+        .catch(error => {
+            console.log(error)
+        })
+}
+
+function stand() {
+    // reveal dealer cards
+    // if dealer sum is less than 17 then draw more cards until it is more
+    standing = true
+    console.log(standing + ", you stand...")
+    if (dealerPointSum < 17) {
+        dealerDraw()
+        console.log("dealer draws...\ndealer sum is " + dealerPointSum)
+    }
+    else {
+        // check for win if player's pointSum is greater than the dealer's dealerPointSum or loss if vice versa
+        if (pointSum > dealerPointSum) {
+            winLoseEl.textContent = "You win!"
+        }
+        else if (pointSum < dealerPointSum) {
+            winLoseEl.textContent = "You lose!"
+        }
+    }
+}
+
+// shuffle deck reset all variables and clear rendered hands
+function replay() {
+    const domainStr = "https://deckofcardsapi.com/api/deck/" + deckID + "/shuffle/"
+
+    fetch(domainStr)
+       .then(response => {
+            return response.json()
+        })
+        .then(deckObj => {
+            cardAmount = 1
+            faces = []
+            pointSum = 0
+            dealerPointSum = 0
+            turn = 1
+            standing = false
+
+            
+
+            play()
         })
         .catch(error => {
             console.log(error)

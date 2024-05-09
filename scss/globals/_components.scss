@@ -1,3 +1,5 @@
+// Semantic element styles
+
 html {
     background-color: var(--dark-green);
     text-align: center;
@@ -5,7 +7,6 @@ html {
 
 body {
     background-color: var(--dark-green);
-    // background-image: linear-gradient(175deg, var(--brunswick-green), var(--dark-green));
 }
 
 section {
@@ -19,14 +20,7 @@ section {
     text-align: left;
 }
 
-.dealer-hand {
-    min-height: 150px;
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    margin: 0px auto;
-    max-width: 1260px;
-}
+// hand styles
 
 .hand {
     display: flex;
@@ -38,7 +32,29 @@ section {
 
 // card styles
 
-.card-slot {
+.hidden {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    animation: none;
+    transform-style: preserve-3d;
+}
+.dealer-hand {
+    min-height: 160px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    margin: 0px auto;
+    width: 600px;
+    text-align: left;
+}
+.dealer-hand .card-slot {
+    width: 100px;
+    height: 140px;
+    perspective: 1000px;
+    margin: 10px 5px;
+}
+section .card-slot {
     width: 226px;
     height: 314px;
     perspective: 1000px;
@@ -56,7 +72,6 @@ section {
 }
 .card-slot:hover .card-face {
     filter: drop-shadow(0px 5px 5px var(--dark-green));
-    // cursor: pointer;
 }
 .card-back, .card-face {
     position: absolute;
@@ -70,13 +85,15 @@ section {
     transform: rotateY(180deg);
 }
 
+// button styles
+
 button {
     font-size: 16pt;
     background: var(--brunswick-green);
     color: var(--secondary-text);
     border: 2px solid var(--primary-text);
     border-radius: 1em;
-    padding: 5px 15px;
+    padding: 8px 25px;
     transition: 355ms cubic-bezier(0.165, 0.84, 0.44, 1);
     margin: 0px auto;
 }
@@ -86,4 +103,8 @@ button:hover {
 }
 button:active {
     transform: scale(1);
+}
+
+.do-not-display {
+    display: none;
 }
