@@ -2,6 +2,7 @@
 
 ## To Do:
 - make blackjack game
+    - make hidden dealer card have a face image of joker from beginning and change the src and add normal card class upon reveal so it animates w/out having to add a whole new div.
     - allow player to replay (shuffle cards and replay w/out using drawing a new deck and refreshing page)
         - hide stand button before player hits
         - maybe make hit button a play button to start

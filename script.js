@@ -31,7 +31,7 @@ function renderCards(deckObj, i, player) {
     // creates image path string
     const cardsImgPath = "/images/cards/" + deckObj.cards[i].code + ".png"
     // adds to path to current faces array index
-    faces[i] = cardsImgPath
+    face = cardsImgPath
     
     // creates cardEl div element as variable
     let cardEl = document.createElement("div")
@@ -39,8 +39,8 @@ function renderCards(deckObj, i, player) {
     // draws card with src of stored cardsImgPath and adds id = i
     cardEl.classList.add('card-slot') // adds "card-slot" class to cardEl div
     hiddenCardEl.classList.add('card-slot') // adds "card-slot" class to hiddenCardEl div
-    cardEl.innerHTML = '<div class="card"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="' + faces[i] + '" id="' + i + '"></div>' // adds children to "cardEl" div
-    hiddenCardEl.innerHTML = '<div class="hidden"><img class="card-back" src="/images/cards/back.png"></div>' // adds children to "hiddenCardEl" div
+    cardEl.innerHTML = '<div class="card"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="' + face + '" id="' + i + '"></div>' // adds children to "cardEl" div
+    hiddenCardEl.innerHTML = '<div class="hidden"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="/images/cards/X2.png" id="' + i + '"></div></div>' // adds children to "hiddenCardEl" div
 
     if (player === "player") {
         hand.appendChild(cardEl) // adds that cardEl div along with it's nested element to PLAYER "hand"
@@ -86,7 +86,6 @@ function dealerDraw() {
             // renders all drawn cards
             for (i = 0; i < cardsLength; i++) {
                 renderCards(deckObj, i, "dealer")
-                // console.log(cardsLength + " card drawn.")
             }
             
             if (turn === 2) {
@@ -140,11 +139,27 @@ function hit() {
 
             // Win/Lose condition check:
             if (pointSum > 21) { // lose condition
-                winLoseEl.textContent = "You're out!"
-
+                winLoseEl.textContent = "Bust!"
+                // remove hit button and replace with replay button
+                // reveal hidden dealer card
+                console.log()
             }
             else if (pointSum === 21) { // win condition
                 winLoseEl.textContent = "Blackjack!"
+                // remove hit button and replace with replay button
+                // reveal hidden dealer card
+                console.log()
+            }
+            else if (pointSum === 21 && dealerPointSum === 21) {
+                winLoseEl.textContent = "Push!"
+                // remove hit button and replace with replay button
+                // reveal hidden dealer card
+            }
+            else if (pointSum < 21 && turn === 5) { // Five Card Charlie: player wins if they draw 5 cards without going out
+                winLoseEl.textContent = "Five Card Charlie!"
+                // remove hit button and replace with replay button
+                // reveal hidden dealer card
+                console.log()
             }
             
             // render points to screen
@@ -157,7 +172,6 @@ function hit() {
 
             // increment turn number
             turn += 1
-            // draw five cards to win (five card charlie) unless dealer draws blackjack
         })
         .catch(error => {
             console.log(error)
@@ -177,9 +191,18 @@ function stand() {
         // check for win if player's pointSum is greater than the dealer's dealerPointSum or loss if vice versa
         if (pointSum > dealerPointSum) {
             winLoseEl.textContent = "You win!"
-        }
+            // remove hit button and replace with replay button
+            // reveal hidden dealer card
+            }
         else if (pointSum < dealerPointSum) {
             winLoseEl.textContent = "You lose!"
+            // remove hit button and replace with replay button
+            // reveal hidden dealer card
+            }
+        else {
+            winLoseEl.textContent = "Push!"
+            // remove hit button and replace with replay button
+            // reveal hidden dealer card
         }
     }
 }
@@ -200,7 +223,7 @@ function replay() {
             turn = 1
             standing = false
 
-            
+            // come back to this
 
             play()
         })
