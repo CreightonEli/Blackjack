@@ -19,7 +19,7 @@ let standing = false
 // adds card elements to DOM
 function renderCards(deckObj, i, player) {
     // creates image path string
-    const cardsImgPath = "/images/cards/" + deckObj.cards[i].code + ".png"
+    const cardsImgPath = "images/cards/" + deckObj.cards[i].code + ".png"
     // adds to path to current faces array index
     face = cardsImgPath
 
@@ -32,8 +32,8 @@ function renderCards(deckObj, i, player) {
     // draws card with src of stored cardsImgPath and adds id = i
     cardEl.classList.add('card-slot') // adds "card-slot" class to cardEl div
     hiddenCardEl.classList.add('card-slot') // adds "card-slot" class to hiddenCardEl div
-    cardEl.innerHTML = '<div class="card"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="' + face + '" id="' + j + '"></div>' // adds children to "cardEl" div
-    hiddenCardEl.innerHTML = '<div class="hidden"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="/images/cards/X2.png" id="' + j + '"></div></div>' // adds children to "hiddenCardEl" div
+    cardEl.innerHTML = '<div class="card"><img class="card-back" src="images/cards/back.png"><img class="card-face" src="' + face + '" id="' + j + '"></div>' // adds children to "cardEl" div
+    hiddenCardEl.innerHTML = '<div class="hidden"><img class="card-back" src="images/cards/back.png"><img class="card-face" src="images/cards/X2.png" id="' + j + '"></div></div>' // adds children to "hiddenCardEl" div
 
     if (player === "player") {
         hand.appendChild(cardEl) // adds that cardEl div along with it's nested element to PLAYER "hand"
