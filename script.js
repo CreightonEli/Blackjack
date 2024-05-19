@@ -25,7 +25,7 @@ function renderCards(deckObj, i, player) {
 
     // saves card path to array for later use
     faces[j] = cardsImgPath
-    
+
     // creates cardEl div element as variable
     let cardEl = document.createElement("div")
     let hiddenCardEl = document.createElement("div")    
@@ -73,9 +73,6 @@ function dealerDraw() {
             else { // if the card drawn is not an ace or face card then parse the integer value of card and add to the sum of the hand
                 dealerPointSum += parseInt(deckObj.cards[0].value)
             }
-
-            // console logs lol
-            console.log("Dealer's Turn " + turn + "\n===============\nDeck ID: " + deckID + "\nCurrent card value: " + deckObj.cards[0].value + "\nPlayer total: " + pointSum + "\nDealer total: " + dealerPointSum)
             
             // renders all drawn cards
             for (i = 0; i < cardsLength; i++) {
@@ -87,8 +84,11 @@ function dealerDraw() {
             }
             else if (standing === true) {
                 stand()
-                console.log(standing)
             }
+
+            // console log for debugging
+            // console.log("Dealer's Turn " + turn + "\n===============\nDeck ID: " + deckID + "\nCurrent card value: " + deckObj.cards[0].value + "\nPlayer total: " + pointSum + "\nDealer total: " + dealerPointSum)
+
         })
         .catch(error => {
             console.log(error)
@@ -134,13 +134,9 @@ function hit() {
                 pointSum += parseInt(deckObj.cards[0].value)
             }
 
-            // bunch of random console logs (CAN and maybe should DELETE LATER)
-            console.log("Player's Turn " + turn + "\n===============\nDeck ID: " + deckID + "\nCurrent card value: " + deckObj.cards[0].value + "\nPlayer total: " + pointSum + "\nDealer total: " + dealerPointSum)
-
             // renders all drawn cards
             for (i = 0; i < cardsLength; i++) {
                 renderCards(deckObj, i, "player")
-                // console.log(cardsLength + " card drawn.")
             }
 
             // Win/Lose condition check:
@@ -150,7 +146,6 @@ function hit() {
                 standBtn.classList.add("no-display")
                 replayBtn.classList.remove("no-display")
                 reveal()
-                console.log()
             }
             else if (pointSum === 21) { // win condition
                 winLoseEl.textContent = "Blackjack!"
@@ -158,7 +153,6 @@ function hit() {
                 standBtn.classList.add("no-display")
                 replayBtn.classList.remove("no-display")
                 reveal()
-                console.log()
             }
             else if (pointSum === 21 && dealerPointSum === 21) {
                 winLoseEl.textContent = "Push!"
@@ -167,13 +161,12 @@ function hit() {
                 replayBtn.classList.remove("no-display")
                 reveal()
             }
-            else if (pointSum < 21 && turn === 5) { // Five Card Charlie: player wins if they draw 5 cards without going out
+            else if (pointSum < 21 && turn === 5 && dealerPointSum != 21) { // Five Card Charlie: player wins if they draw 5 cards without going out
                 winLoseEl.textContent = "Five Card Charlie!"
                 hitBtn.classList.add("no-display")
                 standBtn.classList.add("no-display")
                 replayBtn.classList.remove("no-display")
                 reveal()
-                console.log()
             }
             
             // render points to screen
@@ -183,6 +176,9 @@ function hit() {
             if (turn === 1 || turn === 2) {
                 dealerDraw()
             }
+
+            // console log for debugging
+            // console.log("Player's Turn " + turn + "\n===============\nDeck ID: " + deckID + "\nCurrent card value: " + deckObj.cards[0].value + "\nPlayer total: " + pointSum + "\nDealer total: " + dealerPointSum)
 
             // increment turn number
             turn += 1
@@ -204,10 +200,8 @@ function stand() {
 
     // if dealer sum is less than 17 then draw more cards until it is more
     standing = true
-    console.log(standing + ", you stand...")
     if (dealerPointSum < 17) {
         dealerDraw()
-        console.log("dealer draws...\ndealer sum is " + dealerPointSum)
     }
     else {
         // check for win if player's pointSum is greater than the dealer's dealerPointSum or loss if vice versa

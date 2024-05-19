@@ -1,0 +1,40 @@
+@media (width <= 1680px) {
+    section {
+        height: 271px;
+    }
+
+    section .card-slot {
+        width: 180px;
+        height: 251px;
+        margin: 10px -15%;
+    }
+    
+    h1 {
+        font-size: 30pt;
+    }
+    
+    h2 {
+        font-size: 21pt;
+    }
+}
+
+// phone
+@media (width <= 400px) {
+    .dealer-hand .card-slot {
+        margin: 10px -50%;
+    }
+
+    section .card-slot {
+        width: 180px;
+        height: 251px;
+        margin: 10px -50%;
+    }
+    
+    h1 {
+        font-size: 30pt;
+    }
+    
+    h2 {
+        font-size: 21pt;
+    }
+}
