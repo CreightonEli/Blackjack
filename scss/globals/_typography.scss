@@ -1,11 +1,9 @@
-h1 {
-    color: var(--primary-text);
-    text-shadow: 3px 2px 0px black;
-    font-size: 36pt;
-    text-decoration: underline;
-}
+:root {
+    --open-sans: "Open Sans", sans-serif;
+    --grenze-gotisch: "Grenze Gotisch", serif;
+    --jacquard-12-regular: "Jacquard 12", system-ui;
+    --cardo-regular: "Cardo", serif;
 
-h2 {
-    font-size: 24pt;
-    color: var(--secondary-text);
+    font-optical-sizing: auto;
+    font-style: normal;
 }

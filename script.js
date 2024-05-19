@@ -1,6 +1,7 @@
 const hand = document.querySelector(".hand")
-const cardFace = document.querySelector(".card-face")
 const hitBtn = document.querySelector("#hit-btn")
+const standBtn = document.querySelector("#stand-btn")
+const replayBtn = document.querySelector("#replay-btn")
 const pointEl = document.querySelector('#point-el')
 const winLoseEl = document.querySelector('#win-lose-el')
 const dealerHand = document.querySelector(".dealer-hand")
@@ -8,30 +9,22 @@ const dealerHand = document.querySelector(".dealer-hand")
 let cardAmount = 1
 let deckID = "new"
 let faces = []
+let j = 0
 let pointSum = 0
 let dealerPointSum = 0
 let turn = 1
 let standing = false
 
-// Game Structure:
-// - [x] player is dealt first card
-// - [x] dealer card is dealt face down
-// - [x] player card is dealt again
-// - [x] dealer card is dealt face up
-// - [/] player hits as much as they want (until bust or blackjack) or stays
-// - [] dealer reveals hidden card
-// - [] if dealer hand total is below 17 then draw a card until total is above 16
 
-// Win/Lose Conditions:
-// - [x] player wins if player hand is greater than dealer hand
-// - [] dealer wins if dealer hand is greater than player hand or is blackjack
-// - [/] player or dealer loses if hand is greater than 21
-
+// adds card elements to DOM
 function renderCards(deckObj, i, player) {
     // creates image path string
     const cardsImgPath = "/images/cards/" + deckObj.cards[i].code + ".png"
     // adds to path to current faces array index
     face = cardsImgPath
+
+    // saves card path to array for later use
+    faces[j] = cardsImgPath
     
     // creates cardEl div element as variable
     let cardEl = document.createElement("div")
@@ -39,8 +32,8 @@ function renderCards(deckObj, i, player) {
     // draws card with src of stored cardsImgPath and adds id = i
     cardEl.classList.add('card-slot') // adds "card-slot" class to cardEl div
     hiddenCardEl.classList.add('card-slot') // adds "card-slot" class to hiddenCardEl div
-    cardEl.innerHTML = '<div class="card"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="' + face + '" id="' + i + '"></div>' // adds children to "cardEl" div
-    hiddenCardEl.innerHTML = '<div class="hidden"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="/images/cards/X2.png" id="' + i + '"></div></div>' // adds children to "hiddenCardEl" div
+    cardEl.innerHTML = '<div class="card"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="' + face + '" id="' + j + '"></div>' // adds children to "cardEl" div
+    hiddenCardEl.innerHTML = '<div class="hidden"><img class="card-back" src="/images/cards/back.png"><img class="card-face" src="/images/cards/X2.png" id="' + j + '"></div></div>' // adds children to "hiddenCardEl" div
 
     if (player === "player") {
         hand.appendChild(cardEl) // adds that cardEl div along with it's nested element to PLAYER "hand"
@@ -51,6 +44,7 @@ function renderCards(deckObj, i, player) {
     else if (player === "dealer") {
         dealerHand.appendChild(cardEl) // adds that cardEl div along with it's nested element to DEALER "hand"
     }
+    j++
 }
 
 // dealer draws cards to dealer hand
@@ -101,9 +95,21 @@ function dealerDraw() {
         })
 }
 
+// reveals hidden cards
+function reveal() {
+    let hiddenCard = document.querySelector(".hidden")
+
+    document.getElementById("1").src = faces[1]
+    hiddenCard.classList.add("card")
+}
+
 // player draws cards to player hand
 function hit() {
     const domainStr = "https://deckofcardsapi.com/api/deck/" + deckID + "/draw/?count=" + cardAmount
+    hitBtn.textContent = "HIT"
+
+    // show stand button
+    standBtn.classList.remove("no-display")
 
     // call API and construct deck object:
     fetch(domainStr)
@@ -140,25 +146,33 @@ function hit() {
             // Win/Lose condition check:
             if (pointSum > 21) { // lose condition
                 winLoseEl.textContent = "Bust!"
-                // remove hit button and replace with replay button
-                // reveal hidden dealer card
+                hitBtn.classList.add("no-display")
+                standBtn.classList.add("no-display")
+                replayBtn.classList.remove("no-display")
+                reveal()
                 console.log()
             }
             else if (pointSum === 21) { // win condition
                 winLoseEl.textContent = "Blackjack!"
-                // remove hit button and replace with replay button
-                // reveal hidden dealer card
+                hitBtn.classList.add("no-display")
+                standBtn.classList.add("no-display")
+                replayBtn.classList.remove("no-display")
+                reveal()
                 console.log()
             }
             else if (pointSum === 21 && dealerPointSum === 21) {
                 winLoseEl.textContent = "Push!"
-                // remove hit button and replace with replay button
-                // reveal hidden dealer card
+                hitBtn.classList.add("no-display")
+                standBtn.classList.add("no-display")
+                replayBtn.classList.remove("no-display")
+                reveal()
             }
             else if (pointSum < 21 && turn === 5) { // Five Card Charlie: player wins if they draw 5 cards without going out
                 winLoseEl.textContent = "Five Card Charlie!"
-                // remove hit button and replace with replay button
-                // reveal hidden dealer card
+                hitBtn.classList.add("no-display")
+                standBtn.classList.add("no-display")
+                replayBtn.classList.remove("no-display")
+                reveal()
                 console.log()
             }
             
@@ -178,8 +192,16 @@ function hit() {
         })
 }
 
+// the player stands
 function stand() {
-    // reveal dealer cards
+    // hide stand button and hit button
+    hitBtn.classList.add("no-display")
+    standBtn.classList.add("no-display")
+    replayBtn.classList.remove("no-display")    
+
+    // reveal dealer cards by adding "card" class to hidden card
+    reveal()
+
     // if dealer sum is less than 17 then draw more cards until it is more
     standing = true
     console.log(standing + ", you stand...")
@@ -191,18 +213,19 @@ function stand() {
         // check for win if player's pointSum is greater than the dealer's dealerPointSum or loss if vice versa
         if (pointSum > dealerPointSum) {
             winLoseEl.textContent = "You win!"
-            // remove hit button and replace with replay button
-            // reveal hidden dealer card
-            }
+            reveal()
+        }
+        else if (pointSum < dealerPointSum && dealerPointSum > 21) {
+            winLoseEl.textContent = "You Win!"
+            reveal()
+        }
         else if (pointSum < dealerPointSum) {
             winLoseEl.textContent = "You lose!"
-            // remove hit button and replace with replay button
-            // reveal hidden dealer card
-            }
+            reveal()
+        }
         else {
             winLoseEl.textContent = "Push!"
-            // remove hit button and replace with replay button
-            // reveal hidden dealer card
+            reveal()
         }
     }
 }
@@ -216,16 +239,24 @@ function replay() {
             return response.json()
         })
         .then(deckObj => {
-            cardAmount = 1
+            
+            for (i = 0; i < j; i++) {
+                document.querySelector(".card-slot").remove()
+            }
+            
             faces = []
+            j = 0
             pointSum = 0
             dealerPointSum = 0
             turn = 1
             standing = false
 
-            // come back to this
+            hitBtn.classList.remove("no-display")
+            standBtn.classList.remove("no-display")
+            replayBtn.classList.add("no-display")
+            winLoseEl.textContent = "Total"
 
-            play()
+            hit()
         })
         .catch(error => {
             console.log(error)

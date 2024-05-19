@@ -6,16 +6,28 @@
     <title>🃏 Play Cards</title>
     <link rel="stylesheet" href="dist/style.css">
     <script src="script.js" defer></script>
-</head>
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cardo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@100..900&family=Jacquard+12&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet"></head>
 <body>
-    <h1>Blackjack</h1>
-    <h2><span id="win-lose-el">Total</span>: <span id="point-el">0</span></h2>
+    <h1>BLACKJACK</h1>
     <div class="dealer-hand"></div>
+    <!-- would be neat to add a stack of cards that the cards appear to be drawn from -->
     <section>
         <div class="hand"></div>
     </section>
-    <button id="hit-btn" onclick="hit()">Hit</button>
-    <button id="stand-btn" onclick="stand()">Stand</button>
-    <!-- <button id="retry-btn" onclick="replay()">Play again?</button> -->
+    <h2><span id="win-lose-el">Total</span>: <span id="point-el">0</span></h2>
+    <div class="buttons">
+        <button id="replay-btn" class="no-display" onclick="replay()">PLAY AGAIN?</button>
+        <button id="hit-btn" onclick="hit()">PLAY</button>
+        <button id="stand-btn" class="no-display" onclick="stand()">STAND</button>
+    </div>
+    <!-- <hr> -->
+    <div class="attribution">
+        <p>Utilizes the <a href="https://deckofcardsapi.com/">Deck of Cards API</a> by Chase Roberts.</p>
+        <p>Made with ♥️ by <a href="https://creightoneli.github.io/">Elijah Creighton</a>.</p>
+    </div>
 </body>
 </html>
