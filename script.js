@@ -5,6 +5,7 @@ const replayBtn = document.querySelector("#replay-btn")
 const pointEl = document.querySelector('#point-el')
 const winLoseEl = document.querySelector('#win-lose-el')
 const scoreEl = document.querySelector("#score-el")
+const bestEl = document.querySelector("#best-el")
 const dealerHand = document.querySelector(".dealer-hand")
 
 let cardAmount = 1
@@ -14,6 +15,7 @@ let j = 0
 let pointSum = 0
 let dealerPointSum = 0
 let scoreSum = 0
+let bestSum = 0
 let turn = 1
 let standing = false
 
@@ -144,8 +146,25 @@ function hit() {
             // Win/Lose condition check:
             if (pointSum > 21) { // lose condition
                 winLoseEl.textContent = "Bust!"
-                // scoreSum -= 1
-                // scoreEl.textContent = scoreSum
+                if (bestSum < scoreSum) {
+                    bestSum = scoreSum
+                    bestEl.textContent = bestSum
+                }
+                scoreSum = 0
+                scoreEl.textContent = scoreSum
+                hitBtn.classList.add("no-display")
+                standBtn.classList.add("no-display")
+                replayBtn.classList.remove("no-display")
+                reveal()
+            }
+            else if (pointSum === 21 && dealerPointSum === 21) { // Push condition
+                winLoseEl.textContent = "Push!"
+                if (bestSum < scoreSum) {
+                    bestSum = scoreSum
+                    bestEl.textContent = bestSum
+                }
+                scoreSum = 0
+                scoreEl.textContent = scoreSum
                 hitBtn.classList.add("no-display")
                 standBtn.classList.add("no-display")
                 replayBtn.classList.remove("no-display")
@@ -153,8 +172,8 @@ function hit() {
             }
             else if (pointSum === 21) { // win condition
                 winLoseEl.textContent = "Blackjack!"
-                // scoreSum += 2
-                // scoreEl.textContent = scoreSum
+                scoreSum += 1
+                scoreEl.textContent = scoreSum
                 hitBtn.classList.add("no-display")
                 standBtn.classList.add("no-display")
                 replayBtn.classList.remove("no-display")
@@ -169,8 +188,8 @@ function hit() {
             }
             else if (pointSum < 21 && turn === 5 && dealerPointSum != 21) { // Five Card Charlie: player wins if they draw 5 cards without going out
                 winLoseEl.textContent = "Five Card Charlie!"
-                // scoreSum += 2
-                // scoreEl.textContent = scoreSum
+                scoreSum += 1
+                scoreEl.textContent = scoreSum
                 hitBtn.classList.add("no-display")
                 standBtn.classList.add("no-display")
                 replayBtn.classList.remove("no-display")
@@ -215,24 +234,34 @@ function stand() {
         // check for win if player's pointSum is greater than the dealer's dealerPointSum or loss if vice versa
         if (pointSum > dealerPointSum) {
             winLoseEl.textContent = "You win!"
-            // scoreSum += 1
-            // scoreEl.textContent = scoreSum
+            scoreSum += 1
+            scoreEl.textContent = scoreSum
             reveal()
         }
         else if (pointSum < dealerPointSum && dealerPointSum > 21) {
             winLoseEl.textContent = "You Win!"
-            // scoreSum += 1
-            // scoreEl.textContent = scoreSum
+            scoreSum += 1
+            scoreEl.textContent = scoreSum
             reveal()
         }
         else if (pointSum < dealerPointSum) {
             winLoseEl.textContent = "You lose!"
-            // scoreSum -= 1
-            // scoreEl.textContent = scoreSum
+            if (bestSum < scoreSum) {
+                bestSum = scoreSum
+                bestEl.textContent = bestSum
+            }
+            scoreSum = 0
+            scoreEl.textContent = scoreSum
             reveal()
         }
         else {
             winLoseEl.textContent = "Push!"
+            if (bestSum < scoreSum) {
+                bestSum = scoreSum
+                bestEl.textContent = bestSum
+            }
+            scoreSum = 0
+            scoreEl.textContent = scoreSum
             reveal()
         }
     }

@@ -1,9 +1,9 @@
 @keyframes slide-in {
     0% {
-        transform: translateY(-3000px) translateX(1000px);
+        transform: translateY(-3000px);
     }
     100% {
-        transform: translateY(0px) translateX(0px);
+        transform: translateY(0px);
     }
 }
 
